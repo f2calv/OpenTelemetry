@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>dotnet-WorkerService-7F8E0A97-9179-4C51-BBA5-FB562A25EC94</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,4 +11,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SharedLibrary\SharedLibrary.csproj" />
   </ItemGroup>
+
 </Project>
