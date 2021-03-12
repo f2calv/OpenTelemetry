@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharedLibrary
+namespace CasCap
 {
     public class Class1
     {
