@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.30709.64
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTelemetryApp", "src\OpenTelemetryApp\OpenTelemetryApp.csproj", "{2C0D539C-6CAC-4A6A-B7B8-D629BC9818A0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedLibrary", "src\SharedLibrary\SharedLibrary.csproj", "{9B171C2B-EF35-4B46-ABDD-22293B93138E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "workerapp", "src\workerapp\workerapp.csproj", "{E9429F39-D321-4DB1-B9D6-D35CC099C469}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedLibrary", "src\SharedLibrary\SharedLibrary.csproj", "{A2555760-AFE0-4DD1-B927-83038D8F39BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "webapi", "src\webapi\webapi.csproj", "{0DCDC2BA-D902-4B53-91F5-1B35905D52E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +21,18 @@ Global
 		{2C0D539C-6CAC-4A6A-B7B8-D629BC9818A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C0D539C-6CAC-4A6A-B7B8-D629BC9818A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C0D539C-6CAC-4A6A-B7B8-D629BC9818A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9B171C2B-EF35-4B46-ABDD-22293B93138E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B171C2B-EF35-4B46-ABDD-22293B93138E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9B171C2B-EF35-4B46-ABDD-22293B93138E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9B171C2B-EF35-4B46-ABDD-22293B93138E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E9429F39-D321-4DB1-B9D6-D35CC099C469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E9429F39-D321-4DB1-B9D6-D35CC099C469}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9429F39-D321-4DB1-B9D6-D35CC099C469}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9429F39-D321-4DB1-B9D6-D35CC099C469}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2555760-AFE0-4DD1-B927-83038D8F39BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2555760-AFE0-4DD1-B927-83038D8F39BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2555760-AFE0-4DD1-B927-83038D8F39BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2555760-AFE0-4DD1-B927-83038D8F39BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DCDC2BA-D902-4B53-91F5-1B35905D52E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DCDC2BA-D902-4B53-91F5-1B35905D52E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DCDC2BA-D902-4B53-91F5-1B35905D52E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DCDC2BA-D902-4B53-91F5-1B35905D52E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

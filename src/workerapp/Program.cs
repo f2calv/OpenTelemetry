@@ -1,18 +1,9 @@
 using CasCap.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-namespace CasCap
-{
-    public class Program
+Host.CreateDefaultBuilder(args)
+    .ConfigureServices((hostContext, services) =>
     {
-        public static void Main(string[] args)
-        {
-            Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddHostedService<WorkerService>();
-                })
-                .Build().Run();
-        }
-    }
-}
+        services.AddHostedService<WorkerService>();
+    })
+    .Build().Run();
