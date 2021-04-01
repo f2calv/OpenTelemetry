@@ -1,14 +1,14 @@
-version: '3.8'  
+version: "3.8"
 
 services:
   jaeger:
     container_name: jaeger
     image: jaegertracing/all-in-one
     ports:
-    - 16686:16686
+      - 16686:16686
     # volumes:
     # - /c/temp/_DockerCompose/elasticsearch-data:/usr/share/elasticsearch/data
-    # environment:  
+    # environment:
     # - xpack.monitoring.enabled=true
     # - xpack.watcher.enabled=false
     # - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
