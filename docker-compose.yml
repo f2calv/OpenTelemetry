@@ -5,7 +5,6 @@ services:
   #https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/examples
   #https://www.jaegertracing.io/docs/1.22/getting-started/
   jaeger:
-    container_name: jaeger
     image: jaegertracing/all-in-one
     ports:
       - 5775:5775/udp
@@ -15,13 +14,9 @@ services:
       - 16686:16686
       - 14268:14268
       - 14250:14250
+      #- 9411:9411
+
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
       - 9411:9411
-    # volumes:
-    # - ./.docker-compose/jaegertracing:/usr/share/jaegertracing/data
-    # environment:
-    # - xpack.monitoring.enabled=true
-    # - xpack.watcher.enabled=false
-    # - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    # - discovery.type=single-node
-    # networks:
-    # - elastic
