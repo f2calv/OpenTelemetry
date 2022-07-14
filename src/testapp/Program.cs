@@ -47,7 +47,7 @@ namespace testapp
 
         static async Task DoSomeWork()
         {
-            using (Activity? activity = s_source.StartActivity("SomeWork"))
+            using (Activity activity = s_source.StartActivity("SomeWork"))
             {
                 await StepOne();
                 await StepTwo();
@@ -56,7 +56,7 @@ namespace testapp
 
         static async Task StepOne()
         {
-            using (Activity? activity = s_source.StartActivity("StepOne"))
+            using (Activity activity = s_source.StartActivity("StepOne"))
             {
                 await Task.Delay(500);
             }
@@ -64,7 +64,7 @@ namespace testapp
 
         static async Task StepTwo()
         {
-            using (Activity? activity = s_source.StartActivity("StepTwo"))
+            using (Activity activity = s_source.StartActivity("StepTwo"))
             {
                 await Task.Delay(1000);
             }
