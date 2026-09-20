@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using OpenTelemetry.Exporter;
+using Microsoft.OpenApi;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System;
@@ -28,55 +27,45 @@ namespace CasCap
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "webapi", Version = "v1" });
             });
 
-            // other configuration here...
-            services.AddOpenTelemetryTracing((builder) => builder
-              .AddAspNetCoreInstrumentation()
-              .AddConsoleExporter()
-              );
+            // Switch exporters by setting UseExporter in appsettings.json.
+            var exporter = Configuration.GetValue<string>("UseExporter")?.ToLowerInvariant();
+            var openTelemetry = services.AddOpenTelemetry();
 
-            // Switch between Zipkin/Jaeger by setting UseExporter in appsettings.json.
-            var exporter = this.Configuration.GetValue<string>("UseExporter").ToLowerInvariant();
             switch (exporter)
             {
                 case "jaeger":
-                    services.AddOpenTelemetryTracing((builder) => builder
-                        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(this.Configuration.GetValue<string>("Jaeger:ServiceName")))
-                        .AddAspNetCoreInstrumentation()
-                        .AddHttpClientInstrumentation()
-                        .AddJaegerExporter());
-
-                    services.Configure<JaegerExporterOptions>(this.Configuration.GetSection("Jaeger"));
-                    break;
-                case "zipkin":
-                    services.AddOpenTelemetryTracing((builder) => builder
-                        .AddAspNetCoreInstrumentation()
-                        .AddHttpClientInstrumentation()
-                        .AddZipkinExporter());
-
-                    services.Configure<ZipkinExporterOptions>(this.Configuration.GetSection("Zipkin"));
+                    openTelemetry.ConfigureResource(builder => builder.AddService(
+                        Configuration.GetValue<string>("Jaeger:ServiceName") ?? "webapi"));
                     break;
                 case "otlp":
-                    // Adding the OtlpExporter creates a GrpcChannel.
-                    // This switch must be set before creating a GrpcChannel/HttpClient when calling an insecure gRPC service.
-                    // See: https://docs.microsoft.com/aspnet/core/grpc/troubleshoot#call-insecure-grpc-services-with-net-core-client
-                    AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-
-                    services.AddOpenTelemetryTracing((builder) => builder
-                        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(this.Configuration.GetValue<string>("Otlp:ServiceName")))
-                        .AddAspNetCoreInstrumentation()
-                        .AddHttpClientInstrumentation()
-                        .AddOtlpExporter(otlpOptions =>
-                        {
-                            otlpOptions.Endpoint = new Uri(this.Configuration.GetValue<string>("Otlp:Endpoint"));
-                        }));
-                    break;
-                default:
-                    services.AddOpenTelemetryTracing((builder) => builder
-                        .AddAspNetCoreInstrumentation()
-                        .AddHttpClientInstrumentation()
-                        .AddConsoleExporter());
+                    openTelemetry.ConfigureResource(builder => builder.AddService(
+                        Configuration.GetValue<string>("Otlp:ServiceName") ?? "webapi"));
                     break;
             }
+
+            openTelemetry.WithTracing(builder =>
+            {
+                builder
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation();
+
+                switch (exporter)
+                {
+                    case "jaeger":
+                        builder.AddOtlpExporter(options => options.Endpoint = new Uri(
+                            Configuration.GetValue<string>("Jaeger:Endpoint")
+                                ?? throw new InvalidOperationException("Jaeger:Endpoint is required.")));
+                        break;
+                    case "otlp":
+                        builder.AddOtlpExporter(options => options.Endpoint = new Uri(
+                            Configuration.GetValue<string>("Otlp:Endpoint")
+                                ?? throw new InvalidOperationException("Otlp:Endpoint is required.")));
+                        break;
+                    default:
+                        builder.AddConsoleExporter();
+                        break;
+                }
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

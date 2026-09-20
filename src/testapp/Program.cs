@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using OpenTelemetry;
-using OpenTelemetry.Exporter;
 using OpenTelemetry.Trace;
 using System;
 using System.Diagnostics;
@@ -17,8 +16,8 @@ namespace testapp
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var zipkinOptions = configuration.GetSection("zipkin").Get<ZipkinExporterOptions>();
-            var jaegerOptions = configuration.GetSection("jaeger").Get<JaegerExporterOptions>();
+            var jaegerEndpoint = new Uri(configuration["Jaeger:Endpoint"]
+                ?? throw new InvalidOperationException("Jaeger:Endpoint is required."));
 
             var tracerProvider = Sdk.CreateTracerProviderBuilder()
                 .SetSampler(new AlwaysOnSampler())
@@ -26,15 +25,7 @@ namespace testapp
                 .AddSource("Sample")
                 // Add more exporters
                 .AddConsoleExporter()
-                .AddZipkinExporter(zipkinOptions =>
-                {
-                    zipkinOptions.Endpoint = zipkinOptions.Endpoint;
-                })
-                .AddJaegerExporter(o =>
-                {
-                    o.AgentHost = jaegerOptions.AgentHost;
-                    o.AgentPort = jaegerOptions.AgentPort;
-                })
+                .AddOtlpExporter(options => options.Endpoint = jaegerEndpoint)
                 .Build();
 
             while (true)
@@ -47,7 +38,7 @@ namespace testapp
 
         static async Task DoSomeWork()
         {
-            using (Activity activity = s_source.StartActivity("SomeWork"))
+            using (var activity = s_source.StartActivity("SomeWork"))
             {
                 await StepOne();
                 await StepTwo();
@@ -56,7 +47,7 @@ namespace testapp
 
         static async Task StepOne()
         {
-            using (Activity activity = s_source.StartActivity("StepOne"))
+            using (var activity = s_source.StartActivity("StepOne"))
             {
                 await Task.Delay(500);
             }
@@ -64,7 +55,7 @@ namespace testapp
 
         static async Task StepTwo()
         {
-            using (Activity activity = s_source.StartActivity("StepTwo"))
+            using (var activity = s_source.StartActivity("StepTwo"))
             {
                 await Task.Delay(1000);
             }
