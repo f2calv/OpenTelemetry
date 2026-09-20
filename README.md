@@ -1,5 +1,7 @@
 # OpenTelemetry .NET Playground
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=f2calv_OpenTelemetry&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=f2calv_OpenTelemetry)
+
 A collection of .NET 10 examples for experimenting with OpenTelemetry instrumentation and exporters.
 It is a learning environment rather than a production observability stack.
 
