@@ -66,13 +66,13 @@ namespace Examples.Console
                             var context = this.listener.GetContext();
 
                             using var activity = source.StartActivity(
-                                $"{context.Request.HttpMethod}:{context.Request.Url.AbsolutePath}",
+                                $"{context.Request.HttpMethod}:{context.Request.Url?.AbsolutePath}",
                                 ActivityKind.Server);
 
                             var headerKeys = context.Request.Headers.AllKeys;
                             foreach (var headerKey in headerKeys)
                             {
-                                string headerValue = context.Request.Headers[headerKey];
+                                var headerValue = context.Request.Headers[headerKey];
                                 activity?.SetTag($"http.header.{headerKey}", headerValue);
                             }
 
@@ -81,7 +81,7 @@ namespace Examples.Console
                             using (var reader = new StreamReader(context.Request.InputStream, context.Request.ContentEncoding))
                             {
                                 requestContent = reader.ReadToEnd();
-                                childSpan.AddEvent(new ActivityEvent("StreamReader.ReadToEnd"));
+                                childSpan?.AddEvent(new ActivityEvent("StreamReader.ReadToEnd"));
                             }
 
                             activity?.SetTag("request.content", requestContent);
@@ -109,8 +109,8 @@ namespace Examples.Console
 
         private class SampleClient : IDisposable
         {
-            private CancellationTokenSource cts;
-            private Task requestTask;
+            private CancellationTokenSource? cts;
+            private Task? requestTask;
 
             public void Start(string url)
             {
@@ -173,8 +173,8 @@ namespace Examples.Console
                 if (this.cts != null)
                 {
                     this.cts.Cancel();
-                    this.requestTask.Wait();
-                    this.requestTask.Dispose();
+                    this.requestTask?.Wait();
+                    this.requestTask?.Dispose();
                     this.cts.Dispose();
                 }
             }

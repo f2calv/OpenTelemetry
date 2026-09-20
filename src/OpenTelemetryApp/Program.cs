@@ -29,11 +29,7 @@ namespace CasCap
             using var openTelemetry = Sdk.CreateTracerProviderBuilder()
                     .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("jaeger-test"))
                     .AddSource("Samples.SampleClient", "Samples.SampleServer")
-                    .AddJaegerExporter(o =>
-                    {
-                        o.AgentHost = "localhost";
-                        o.AgentPort = 16686;
-                    })
+                    .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"))
                     .Build();
 
             // The above lines are required only in Applications which decide to use OpenTelemetry.
