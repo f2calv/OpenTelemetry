@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "DavidAnson.vscode-markdownlint",
+    "editorconfig.editorconfig",
+    "github.vscode-github-actions",
+    "ms-azuretools.vscode-containers",
+    "ms-dotnettools.csdevkit",
+    "redhat.vscode-yaml"
+  ]
+}
