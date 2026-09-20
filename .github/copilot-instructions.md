@@ -15,9 +15,9 @@ Everything below is specific to this repository.
 ## Repository Purpose
 
 This repository is a .NET OpenTelemetry playground with console, worker and ASP.NET Core examples.
-The local Compose stack supplies Jaeger and Zipkin for observing synthetic development traffic.
+The local Compose stack supplies Jaeger for observing synthetic development traffic over OTLP.
 
 - Keep instrumentation shared through `SharedLibrary` where the examples use the same behavior.
 - Do not add telemetry attributes containing credentials, request bodies or personal data.
-- Treat the current .NET 6 targets and exporter package set as a coordinated legacy baseline; do
-  not modernize either implicitly while making unrelated changes.
+- Keep every project on .NET 10 and keep the OpenTelemetry package family aligned when updating the
+  instrumentation or exporter set.
