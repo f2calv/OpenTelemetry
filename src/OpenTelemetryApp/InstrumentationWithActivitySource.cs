@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace Examples.Console
 {
-    internal class InstrumentationWithActivitySource : IDisposable
+    internal class InstrumentationWithActivitySource : IAsyncDisposable
     {
         private const string RequestPath = "/api/request";
         private SampleServer server = new SampleServer();
@@ -40,9 +40,9 @@ namespace Examples.Console
             this.client.Start(url);
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            this.client.Dispose();
+            await this.client.DisposeAsync().ConfigureAwait(false);
             this.server.Dispose();
         }
 
@@ -107,7 +107,7 @@ namespace Examples.Console
             }
         }
 
-        private class SampleClient : IDisposable
+        private class SampleClient : IAsyncDisposable
         {
             private CancellationTokenSource? cts;
             private Task? requestTask;
@@ -138,7 +138,7 @@ namespace Examples.Console
 
                                 activity?.SetTag("http.status_code", $"{response.StatusCode:D}");
 
-                                var responseContent = await response.Content.ReadAsStringAsync();
+                                var responseContent = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
                                 activity?.SetTag("response.content", responseContent);
                                 activity?.SetTag("response.length", responseContent.Length.ToString(CultureInfo.InvariantCulture));
 
@@ -168,12 +168,21 @@ namespace Examples.Console
                     cancellationToken);
             }
 
-            public void Dispose()
+            public async ValueTask DisposeAsync()
             {
                 if (this.cts != null)
                 {
-                    this.cts.Cancel();
-                    this.requestTask?.Wait();
+                    await this.cts.CancelAsync().ConfigureAwait(false);
+                    if (this.requestTask != null)
+                    {
+                        try
+                        {
+                            await this.requestTask.ConfigureAwait(false);
+                        }
+                        catch (OperationCanceledException) when (this.cts.IsCancellationRequested)
+                        {
+                        }
+                    }
                     this.requestTask?.Dispose();
                     this.cts.Dispose();
                 }
