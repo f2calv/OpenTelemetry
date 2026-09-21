@@ -11,7 +11,7 @@ namespace CasCap
         static string sourceName = $"{nameof(CasCap)}.{AppDomain.CurrentDomain.FriendlyName}";
         static readonly ActivitySource MyActivitySource = new ActivitySource(sourceName);
 
-        public static void Main()
+        public static async Task Main()
         {
             //using var openTelemetry = Sdk.CreateTracerProviderBuilder()
             //    .SetSampler(new AlwaysOnSampler())
@@ -34,7 +34,7 @@ namespace CasCap
 
             // The above lines are required only in Applications which decide to use OpenTelemetry.
 
-            using (var sample = new InstrumentationWithActivitySource())
+            await using (var sample = new InstrumentationWithActivitySource())
             {
                 sample.Start();
 
