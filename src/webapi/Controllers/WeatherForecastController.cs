@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 namespace CasCap.Controllers
 {
@@ -30,13 +31,12 @@ namespace CasCap.Controllers
         {
             _logger.LogInformation("{methodName} on {controllerName} hit", nameof(Get), nameof(WeatherForecastController));
 
-            var res = await httpClient.GetStringAsync("http://google.com");
-            var rng = new Random();
+            var res = await httpClient.GetStringAsync("https://www.google.com", HttpContext.RequestAborted);
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
+                TemperatureC = RandomNumberGenerator.GetInt32(-20, 55),
+                Summary = Summaries[RandomNumberGenerator.GetInt32(Summaries.Length)]
             })
             .ToArray();
         }
