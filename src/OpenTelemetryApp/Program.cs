@@ -3,14 +3,10 @@ using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System;
-using System.Diagnostics;
 namespace CasCap
 {
     class Program
     {
-        static string sourceName = $"{nameof(CasCap)}.{AppDomain.CurrentDomain.FriendlyName}";
-        static readonly ActivitySource MyActivitySource = new ActivitySource(sourceName);
-
         public static async Task Main()
         {
             //using var openTelemetry = Sdk.CreateTracerProviderBuilder()
