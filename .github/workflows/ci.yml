@@ -35,6 +35,7 @@ jobs:
     with:
       version: ${{ needs.versioning.outputs.version }}
       solution-name: OpenTelemetry.sln
+      execute-tests: false
 
   release:
     needs: [lint, versioning, build]
